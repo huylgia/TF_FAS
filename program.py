@@ -61,7 +61,10 @@ def trainer():
     MODEL.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
     # call fit
-    MODEL.fit(train_gen, validation_data=[celeba_val_gen, lcc_val_gen], epochs=EPOCH, steps_per_epoch=total_step)
+    MODEL.fit(train_gen, validation_data=[celeba_val_gen, lcc_val_gen], epochs=EPOCH,
+              steps_per_epoch=total_step,
+              callbacks=callbacks,
+              class_weights=dataset.CLASS_WEIGHTS)
 
 
 

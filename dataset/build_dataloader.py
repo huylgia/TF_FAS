@@ -18,7 +18,7 @@ IMAGE_WIDTH = None
 IMAGE_HEIGHT = None
 
 PREPROCESS = dict(classes=[0, 1], class_mode='binary' if ACTIVATION=='sigmoid' else 'categorical',
-                 target_size=(IMAGE_WIDTH, IMAGE_HEIGHT),
+                 target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
                  interpolation=INTERPOLATION, shuffle=True, seed=1234)
 
 AUGMENT = dict(rotation_range = 20,
@@ -48,7 +48,7 @@ def normalize(image):
 
 def build_dataloader():
     train_df, celeba_val_df, lcc_val_df = ds.main()
-    CLASS_WEIGHTS = define_classweight(train_df)
+    CLASS_WEIGHTS = define_classweight(train_df) if CLASS_WEIGHTS else None
 
     # create datagen
     train_datagen = ImageDataGenerator(preprocessing_function=normalize, **AUGMENT)

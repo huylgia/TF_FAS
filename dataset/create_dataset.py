@@ -44,6 +44,8 @@ def create_lcc_fasd_df(directory):
     df = []
 
     for label in os.listdir(directory):
+        if label.startswith("."): continue
+        
         label_dir = os.path.join(directory, label)
 
         data = [["{}/{}".format(label_dir, filename), LABEL_MAP[label]] for filename in os.listdir(label_dir)]
