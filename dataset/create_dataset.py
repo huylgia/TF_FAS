@@ -17,8 +17,9 @@ def main():
 
     # concat training dataset
     train_df = pd.concat([celeba_train_df, lcc_fasd_train_df])
+    val_df = pd.concat([celeba_val_df, lcc_fasd_val_df])
 
-    return train_df, celeba_val_df, lcc_fasd_val_df
+    return train_df, val_df
 
 def create_celeba_df(directory):
     '''

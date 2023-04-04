@@ -15,8 +15,7 @@ def setup_callback(total_step, config):
     val_logger = CSVLogger(config['MODEL_DIR']+'/evaluate.log')
 
     # checkpoint
-    celeba_call = ModelCheckpoint(config['MODEL_DIR'] + '/best_celeba.h5', mode='min', monitor='val_acer', save_best_only=True, verbose=1)
-    lcc_call    = ModelCheckpoint(config['MODEL_DIR'] + '/best_lcc_fasd.h5', mode='min', monitor='val_acer', save_best_only=True, verbose=1)
+    checkpoint_call    = ModelCheckpoint(config['MODEL_DIR'] + '/best_acer.h5', mode='min', monitor='val_acer', save_best_only=True, verbose=1)
 
     # save after n epoch
     epoch_path = config['MODEL_DIR'] + '/epoch_{epoch:02d}.h5'
@@ -26,11 +25,11 @@ def setup_callback(total_step, config):
     latest_path = config['MODEL_DIR'] + "/latest.h5"
     latest_call = ModelCheckpoint(latest_path, verbose=1)
 
-    return [celeba_call, lcc_call, train_logger, val_logger, epoch_call, latest_call]
+    return [checkpoint_call, train_logger, val_logger, epoch_call, latest_call]
 
 def trainer(config):
     # build dataloader
-    train_gen, celeba_val_gen, lcc_val_gen = dataset.build_dataloader(config)
+    train_gen, val_gen = dataset.build_dataloader(config)
     total_step = len(train_gen)
 
     # set up scheduler
@@ -61,7 +60,7 @@ def trainer(config):
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
     # call fit
-    model.fit(train_gen, validation_data=[celeba_val_gen, lcc_val_gen], epochs=config['EPOCH'],
+    model.fit(train_gen, validation_data=val_gen, epochs=config['EPOCH'],
               steps_per_epoch=total_step,
               callbacks=callbacks,
               class_weight=config['CLASS_WEIGHTS'])

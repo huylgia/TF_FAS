@@ -12,8 +12,8 @@ def define_classweight(train_df):
     # Define class weight
     class_counts = train_df['class'].value_counts()
 
-    weight0 = len(train_df) / class_counts['live'] * (1 / 2)
-    weight1 = len(train_df) / class_counts['spoof'] * (1 / 2)
+    weight0 = len(train_df) / class_counts['0'] * (1 / 2)
+    weight1 = len(train_df) / class_counts['1'] * (1 / 2)
     class_weight = {0: weight0, 1: weight1}
 
     return class_weight
@@ -30,7 +30,7 @@ def build_dataloader(config):
     MEAN = config['MEAN']
     STD  = config['STD']
     
-    train_df, celeba_val_df, lcc_val_df = ds.main()
+    train_df, val_df = ds.main()
     config['CLASS_WEIGHTS'] = define_classweight(train_df) if config['CLASS_WEIGHTS'] else None
 
     # create datagen
@@ -41,15 +41,12 @@ def build_dataloader(config):
     train_params = copy.deepcopy(config['PREPROCESS'])
     train_params.update({'dataframe': train_df, 'batch_size': config['TRAIN_BATCH_SIZE']})
 
-    celeba_val_params   = copy.deepcopy(config['PREPROCESS'])
-    celeba_val_params.update({'dataframe': celeba_val_df, 'batch_size': config['VAL_BATCH_SIZE']})
+    val_params   = copy.deepcopy(config['PREPROCESS'])
+    val_params.update({'dataframe': val_df, 'batch_size': config['VAL_BATCH_SIZE']})
 
-    lcc_val_params   = copy.deepcopy(config['PREPROCESS'])
-    lcc_val_params.update({'dataframe': lcc_val_df, 'batch_size': config['VAL_BATCH_SIZE']})
 
     # Generate dataset for train, val and test
     train_gen = train_datagen.flow_from_dataframe(**train_params)
-    celeba_val_gen = val_datagen.flow_from_dataframe(**celeba_val_params)
-    lcc_val_gen = val_datagen.flow_from_dataframe(**lcc_val_params)
+    val_gen = val_datagen.flow_from_dataframe(**val_params)
 
-    return train_gen, celeba_val_gen, lcc_val_gen
+    return train_gen, val_gen

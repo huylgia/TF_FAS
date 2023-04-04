@@ -1,11 +1,11 @@
-from keras_cv_attention_models import edgenext, fasternet
+from keras_cv_attention_models import edgenext, fasternet, efficientformer
 from loss import macro_f1_loss, binary_focal_crossentropy, binary_crossentropy, combine_loss
 from optimizer import ExponentialDecay, Lion, Adam
 
 ACTIVATION = 'sigmoid'
 INTERPOLATION = 'bicubic'
-IMAGE_WIDTH = 128
-IMAGE_HEIGHT = 128
+IMAGE_WIDTH = 224
+IMAGE_HEIGHT = 224
 
 config = dict(
     SAVE_EPOCH=2,
@@ -16,9 +16,9 @@ config = dict(
     STD  = [0.229, 0.224, 0.225],
 
     ACTIVATION = ACTIVATION,
-    TRAIN_BATCH_SIZE = 1024,
-    VAL_BATCH_SIZE = 1024,
-    CLASS_WEIGHTS = False,
+    TRAIN_BATCH_SIZE = 128,
+    VAL_BATCH_SIZE = 128,
+    CLASS_WEIGHTS = True,
 
     PREPROCESS = dict(classes=['0', '1'], class_mode='binary' if ACTIVATION=='sigmoid' else 'categorical',
                     target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
@@ -33,11 +33,11 @@ config = dict(
                 fill_mode="nearest"),
 
     # ======================MODEL============================         
-    MODEL = edgenext.EdgeNeXt_XX_Small,
+    MODEL = efficientformer.EfficientFormerV2S0,
     MODEL_PARAMS = dict(input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3),
                         pretrained="imagenet", num_classes=1, classifier_activation=ACTIVATION,
-                        dropout=0.5),
-    MODEL_DIR= "/content/drive/MyDrive/Liveness/outputs/tensorflow/edgenext_xx_small",
+                        dropout=0.5, use_distillation=False),
+    MODEL_DIR= "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2",
     
     # =====================OPTIMIZER========================
     SCHEDULER_PARAMS = dict(initial_learning_rate=0.001, decay_rate=0.96, warmup_epoch=1),
@@ -47,4 +47,4 @@ config = dict(
     OPTIMIZER = Lion,
 
     # =====================LOSS==============================
-    LOSS = combine_loss)
+    LOSS = binary_crossentropy)
