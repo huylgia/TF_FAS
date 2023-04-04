@@ -16,8 +16,8 @@ config = dict(
     STD  = [0.229, 0.224, 0.225],
 
     ACTIVATION = ACTIVATION,
-    TRAIN_BATCH_SIZE = 1024,
-    VAL_BATCH_SIZE = 1024,
+    TRAIN_BATCH_SIZE = 32,
+    VAL_BATCH_SIZE = 32,
     CLASS_WEIGHTS = False,
 
     PREPROCESS = dict(classes=['0', '1'], class_mode='binary' if ACTIVATION=='sigmoid' else 'categorical',

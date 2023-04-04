@@ -21,10 +21,10 @@ class ACER(Metric):
         pos = tf.math.equal(y_true, 1)
         neg = tf.math.equal(y_true, 0)
 
-        fn = tf.equal(tf.gather(y_true, tf.where(pos)), tf.gather(y_pred, tf.where(pos)))
+        fn = tf.equal(tf.gather(y_true, tf.where(pos)[:, 0]), tf.gather(y_pred, tf.where(pos)[:, 0]))
         fn = tf.reduce_sum(1 - tf.cast(fn, tf.float32))
 
-        fp = tf.equal(tf.gather(y_true, tf.where(neg)), tf.gather(y_pred, tf.where(neg)))
+        fp = tf.equal(tf.gather(y_true, tf.where(neg)[:, 0]), tf.gather(y_pred, tf.where(neg)[:, 0]))
         fp = tf.reduce_sum(1 - tf.cast(fp, tf.float32))        
         
         n = tf.reduce_sum(tf.cast(neg, tf.float32))
