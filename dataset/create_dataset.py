@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 
-LABEL_MAP = {'real': 0, 'live': 0, 'fake': 1, 'spoof': 1}
+LABEL_MAP = {'real': '0', 'live': '0', 'fake': '1', 'spoof': '1'}
 
 CELEBA_TRAIN_DIRECTORY = "/content/CelebA_Spoof_origin_crop/Data/train"
 CELEBA_VAL_DIRECTORY  = "/content/CelebA_Spoof_origin_crop/Data/test"
@@ -45,8 +45,9 @@ def create_lcc_fasd_df(directory):
 
     for label in os.listdir(directory):
         if label.startswith("."): continue
-        
         label_dir = os.path.join(directory, label)
+        if os.path.isfile(label_dir):
+            continue
 
         data = [["{}/{}".format(label_dir, filename), LABEL_MAP[label]] for filename in os.listdir(label_dir)]
         df.extend(data)
