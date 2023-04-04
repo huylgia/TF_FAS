@@ -3,7 +3,7 @@ from loss import macro_f1_loss, binary_focal_crossentropy, binary_crossentropy, 
 from optimizer import ExponentialDecay, Lion, Adam
 
 ACTIVATION = 'sigmoid'
-INTERPOLATION = 'bilinear'
+INTERPOLATION = 'bicubic'
 IMAGE_WIDTH = 128
 IMAGE_HEIGHT = 128
 
@@ -16,8 +16,8 @@ config = dict(
     STD  = [0.229, 0.224, 0.225],
 
     ACTIVATION = ACTIVATION,
-    TRAIN_BATCH_SIZE = 32,
-    VAL_BATCH_SIZE = 32,
+    TRAIN_BATCH_SIZE = 1024,
+    VAL_BATCH_SIZE = 1024,
     CLASS_WEIGHTS = False,
 
     PREPROCESS = dict(classes=['0', '1'], class_mode='binary' if ACTIVATION=='sigmoid' else 'categorical',
@@ -47,4 +47,4 @@ config = dict(
     OPTIMIZER = Lion,
 
     # =====================LOSS==============================
-    LOSS = binary_focal_crossentropy)
+    LOSS = combine_loss)
