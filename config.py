@@ -38,7 +38,7 @@ config = dict(
                         pretrained="imagenet", num_classes=1, classifier_activation=ACTIVATION,
                         dropout=0.5, use_distillation=False),
     MODEL_DIR = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2",
-    RESUME = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2/latest"
+    RESUME = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2/latest.h5"
     RESUME_PARAMS = dict('Lion': Lion)
 
     # =====================OPTIMIZER========================
