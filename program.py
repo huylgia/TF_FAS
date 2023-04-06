@@ -2,6 +2,7 @@ import dataset
 from metric import ACER
 from callback import CustomLogger, CSVLogger, ModelCheckpoint
 from optimizer import WarmUp
+from keras.models import load_model
 import os
 
 def setup_callback(total_step, config):
@@ -59,6 +60,10 @@ def trainer(config):
     model = config['MODEL'](**config['MODEL_PARAMS'])
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
+
+    if config['RESUME']:
+        config['RESUME_PARAMS'].update({'ACER': ACER, 'WarmUp': WarmUp})
+        model = load_model(config['RESUME'], custom_objects=config['RESUME_PARAMS'])
     # call fit
     model.fit(train_gen, validation_data=val_gen, epochs=config['EPOCH'],
               steps_per_epoch=total_step,

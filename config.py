@@ -37,8 +37,10 @@ config = dict(
     MODEL_PARAMS = dict(input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3),
                         pretrained="imagenet", num_classes=1, classifier_activation=ACTIVATION,
                         dropout=0.5, use_distillation=False),
-    MODEL_DIR= "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2",
-    
+    MODEL_DIR = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2",
+    RESUME = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2/latest"
+    RESUME_PARAMS = dict('Lion': Lion)
+
     # =====================OPTIMIZER========================
     SCHEDULER_PARAMS = dict(initial_learning_rate=0.001, decay_rate=0.96, warmup_epoch=1),
     SCHEDULER = ExponentialDecay,
