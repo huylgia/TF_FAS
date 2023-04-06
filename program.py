@@ -12,9 +12,6 @@ def setup_callback(total_step, config):
     # train logger
     train_logger = CustomLogger(config['MODEL_DIR']+'/training.log')
 
-    # val logger 
-    val_logger = CSVLogger(config['MODEL_DIR']+'/evaluate.log')
-
     # checkpoint
     checkpoint_call    = ModelCheckpoint(config['MODEL_DIR'] + '/best_acer.h5', mode='min', monitor='val_acer', save_best_only=True, verbose=1)
 
