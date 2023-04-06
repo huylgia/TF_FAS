@@ -23,7 +23,7 @@ def setup_callback(total_step, config):
     latest_path = config['MODEL_DIR'] + "/latest.h5"
     latest_call = ModelCheckpoint(latest_path, verbose=1)
 
-    return [checkpoint_call, train_logger, val_logger, epoch_call, latest_call]
+    return [checkpoint_call, train_logger, epoch_call, latest_call]
 
 def trainer(config):
     # build dataloader
