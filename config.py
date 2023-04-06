@@ -39,7 +39,7 @@ config = dict(
                         dropout=0.5, use_distillation=False),
     MODEL_DIR = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2",
     RESUME = "/content/drive/MyDrive/Liveness/outputs/tensorflow/eformerv2/latest.h5",
-    RESUME_PARAMS = dict('Lion': Lion),
+    RESUME_PARAMS = dict(Lion= Lion),
 
     # =====================OPTIMIZER========================
     SCHEDULER_PARAMS = dict(initial_learning_rate=0.001, decay_rate=0.96, warmup_epoch=1),
