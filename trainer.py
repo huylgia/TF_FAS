@@ -26,7 +26,11 @@ def setup_callback(total_step, config):
 
     return [checkpoint_call, train_logger, epoch_call, latest_call]
 
-def trainer(config, train_gen, val_gen, total_step):
+def trainer(config):
+    # build dataloader
+    train_gen, val_gen = dataset.build_dataloader(config)
+    total_step = len(train_gen)
+
     # set up scheduler
     config['SCHEDULER_PARAMS']['decay_steps'] = total_step//5
     
@@ -73,15 +77,10 @@ if __name__ == "__main__":
         os.makedirs(cfg['MODEL_DIR'])
         shutil.copy('config.py', cfg['MODEL_DIR'])
 
-
-    # build dataloader
-    train_gen, val_gen = dataset.build_dataloader(cfg)
-    total_step = len(train_gen)
-
     if cfg['TRAIN_DIS']:
         strategy = tf.distribute.MirroredStrategy()
         with strategy.scope():
-            trainer(cfg, train_gen, val_gen, total_step)
+            trainer(cfg)
 
 
 
