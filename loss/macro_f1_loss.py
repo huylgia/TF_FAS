@@ -1,6 +1,6 @@
 from keras import backend as K
 
-def macro_f1_loss(y_true, y_pred, epsilon=1e-16):
+def macro_f1_loss(y_true, y_pred, alpha=0.0, epsilon=1e-16):
     """Compute the macro soft F1-score as a cost (average 1 - soft-F1 across all labels).
     Use probability values instead of binary predictions.
     This version uses the computation of soft-F1 for both positive and negative class for each label.
@@ -30,6 +30,10 @@ def macro_f1_loss(y_true, y_pred, epsilon=1e-16):
     cost_class0 = 1 - soft_f1_class0
     
     # Take the average of both costs
-    cost = K.mean(0.5 * (cost_class1 + cost_class0))
+    if alpha:
+        total_cost = alpha*cost_class1 + (1-alpha)*cost_class0
+    else:
+        total_cost = 0.5 * (cost_class1 + cost_class0)
+    cost = K.mean(total_cost)
     
     return cost

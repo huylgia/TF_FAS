@@ -4,16 +4,11 @@ import numpy as np
 
 LABEL_MAP = {'real': '0', 'live': '0', 'fake': '1', 'spoof': '1'}
 
-CELEBA_TRAIN_DIRECTORY = "/content/CelebA_Spoof_origin_crop/Data/train"
-CELEBA_VAL_DIRECTORY  = "/content/CelebA_Spoof_origin_crop/Data/test"
-LCC_TRAIN_DIRECTORY = "/content/LCC_FASD/LCC_FASD_training"
-LCC_VAL_DIRECTORY = "/content/LCC_FASD/LCC_FASD_development"
-
-def main():
-    celeba_train_df = create_celeba_df(CELEBA_TRAIN_DIRECTORY)
-    celeba_val_df = create_celeba_df(CELEBA_VAL_DIRECTORY)
-    lcc_fasd_train_df = create_lcc_fasd_df(LCC_TRAIN_DIRECTORY)
-    lcc_fasd_val_df = create_lcc_fasd_df(LCC_VAL_DIRECTORY)
+def main(config):
+    celeba_train_df = create_celeba_df(config['CELEBA_TRAIN_DIRECTORY'])
+    celeba_val_df = create_celeba_df(config['CELEBA_VAL_DIRECTORY'])
+    lcc_fasd_train_df = create_lcc_fasd_df(config['LCC_TRAIN_DIRECTORY'])
+    lcc_fasd_val_df = create_lcc_fasd_df(config['LCC_VAL_DIRECTORY'])
 
     # concat training dataset
     train_df = pd.concat([celeba_train_df, lcc_fasd_train_df])

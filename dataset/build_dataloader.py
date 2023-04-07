@@ -30,11 +30,11 @@ def build_dataloader(config):
     MEAN = config['MEAN']
     STD  = config['STD']
     
-    train_df, val_df = ds.main()
+    train_df, val_df = ds.main(config)
     config['CLASS_WEIGHTS'] = define_classweight(train_df) if config['CLASS_WEIGHTS'] else None
 
     # create datagen
-    train_datagen = ImageDataGenerator(preprocessing_function=normalize, **config['AUGMENT'])
+    train_datagen = ImageDataGenerator(preprocessing_function=normalize, **config.get('AUGMENT', dict()))
     val_datagen   = ImageDataGenerator(preprocessing_function=normalize)
 
     # get param for dataloader

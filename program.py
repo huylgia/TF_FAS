@@ -4,6 +4,7 @@ from callback import CustomLogger, CSVLogger, ModelCheckpoint
 from optimizer import WarmUp
 from keras.models import load_model
 import os
+import tensorflow as tf
 
 def setup_callback(total_step, config):
     if not os.path.exists(config['MODEL_DIR']):
@@ -25,11 +26,7 @@ def setup_callback(total_step, config):
 
     return [checkpoint_call, train_logger, epoch_call, latest_call]
 
-def trainer(config):
-    # build dataloader
-    train_gen, val_gen = dataset.build_dataloader(config)
-    total_step = len(train_gen)
-
+def trainer(config, train_gen, val_gen, total_step):
     # set up scheduler
     config['SCHEDULER_PARAMS']['decay_steps'] = total_step//5
     
@@ -57,17 +54,34 @@ def trainer(config):
     model = config['MODEL'](**config['MODEL_PARAMS'])
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
-
-    if config['RESUME']:
+    if config.get('RESUME', ''):
         config['RESUME_PARAMS'].update({'ACER': ACER, 'WarmUp': WarmUp})
         model = load_model(config['RESUME'], custom_objects=config['RESUME_PARAMS'])
-        
+
     # call fit
     model.fit(train_gen, validation_data=val_gen, epochs=config['EPOCH'],
               steps_per_epoch=total_step,
               callbacks=callbacks,
               class_weight=config['CLASS_WEIGHTS'])
 
+if __name__ == "__main__":
+    import config
+    import os, shutil
+
+    cfg = config.config
+    if not os.path.exists(cfg['MODEL_DIR']):
+        os.makedirs(cfg['MODEL_DIR'])
+        shutil.copy('config.py', cfg['MODEL_DIR'])
+
+
+    # build dataloader
+    train_gen, val_gen = dataset.build_dataloader(cfg)
+    total_step = len(train_gen)
+
+    if cfg['TRAIN_DIS']:
+        strategy = tf.distribute.MirroredStrategy()
+        with strategy.scope():
+            trainer(cfg, train_gen, val_gen, total_step)
 
 
 
